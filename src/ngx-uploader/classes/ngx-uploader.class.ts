@@ -212,6 +212,10 @@ export class NgUploaderService {
       let eta: number | null = null;
 
       xhr.upload.addEventListener('progress', (e: ProgressEvent) => {
+        // Check that the file upload has not been cancelled before progressing.
+        if (file.progress.status === UploadStatus.Canceled) {
+          observer.complete();
+        }
         if (e.lengthComputable) {
           const percentage = Math.round((e.loaded * 100) / e.total);
           const diff = new Date().getTime() - time;
